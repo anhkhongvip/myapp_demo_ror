@@ -1,0 +1,43 @@
+<div class="bg-primary">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="#">Samples App</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          
+        </ul> 
+        <ul class="navbar-nav ml-auto"> 
+          <li class="nav-item">
+            <%= link_to "Home", root_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Help", help_path, class: "nav-link" %>
+          </li>
+          <% if logged_in? %>
+            <li class="nav-item">
+              <%= link_to "Users", users_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item dropdown mr-5">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Account
+              </a>
+              <div class="dropdown-menu mr-5" aria-labelledby="navbarDropdown">
+                <%= link_to "Profile", current_user, class: "dropdown-item" %>
+                <%= link_to "Settings", edit_user_path(current_user) , class: "dropdown-item" %>
+                <%= button_to "Log out", logout_path, method: :delete , class: "dropdown-item"%>
+              </div>
+            </li>
+          <% else %>
+            <li class="nav-item">
+              <%= link_to "Login", login_path, class: "nav-link" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>

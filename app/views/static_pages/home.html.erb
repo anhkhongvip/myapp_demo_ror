@@ -1,0 +1,33 @@
+<% provide(:title, "Home") %>
+<% if logged_in? %>
+  <div class="row">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <%= render 'shared/user_info' %>
+      </section>
+      <section class="stats">
+        <%= render 'shared/stats' %>
+      </section>
+      <section class="micropost_form">
+        <%= render 'shared/micropost_form' %>
+      </section>
+    </aside>
+     <div class="col-md-8">
+      <h3>Micropost Feed</h3>
+      <%= render 'shared/feed' %>
+    </div> 
+  </div>
+<% else %>
+  <h1 class="text-center">Welcome to the Sample App</h1>
+  <p class="text-center">This is home page for the ROR sample application</p>
+  <div class="row justify-content-center">
+    <div class="col-sm-6 text-center">
+      <% if logged_in? %>
+        <h3> <%= @current_user.name %></h3>
+      <% else %>
+       <%= link_to "Sign up now!", signup_path, class: "btn btn-outline-info" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>  
+
