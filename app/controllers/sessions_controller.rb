@@ -28,13 +28,7 @@ class SessionsController < ApplicationController
   end
 
   def omniauth #log users in with omniauth
-    user  = User.find_or_create_by(email: auth[:info][:email]) do |u|
-          u.email = auth[:info][:email]
-          u.name = auth[:info][:name]
-          u.uid = auth[:uid]
-          u.provider = auth[:provider]
-          u.password = SecureRandom.hex(10)
-    end
+    user = User.from_omniauth(auth)
 
     if user.valid?
         session[:user_id] = user.id;

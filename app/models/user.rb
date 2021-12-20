@@ -1,5 +1,6 @@
 class User < ApplicationRecord
     has_many :microposts, dependent: :destroy
+    has_many :providers, dependent: :destroy
     has_many :active_relationships, class_name:  "Relationship",
                                   foreign_key: "follower_id",
                                   dependent:   :destroy
@@ -65,6 +66,15 @@ class User < ApplicationRecord
     # Returns true if a password reset has expired.
     def password_reset_expired?
         reset_sent_at < 2.hours.ago
+    end
+
+    def self.from_omniauth(auth)
+        user  = User.find_or_create_by(email: auth[:info][:email]) do |u|
+            u.email = auth[:info][:email]
+            u.name = auth[:info][:name]
+            u.password = SecureRandom.hex(10)
+        end
+        user.providers.create(name: auth[:provider], uid: auth[:uid])
     end
 
     # Defines a proto-feed.
