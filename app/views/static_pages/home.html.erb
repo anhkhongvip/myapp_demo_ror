@@ -12,7 +12,7 @@
         <%= render 'shared/micropost_form' %>
       </section>
     </aside>
-     <div class="col-md-8">
+    <div class="col-md-8">
       <h3>Micropost Feed</h3>
       <%= render 'shared/feed' %>
     </div> 
@@ -25,7 +25,7 @@
       <% if logged_in? %>
         <h3> <%= @current_user.name %></h3>
       <% else %>
-       <%= link_to "Sign up now!", signup_path, class: "btn btn-outline-info" %>
+        <%= link_to "Sign up now!", signup_path, class: "btn btn-outline-info" %>
       <% end %>
     </div>
   </div>
