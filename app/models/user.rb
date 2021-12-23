@@ -1,11 +1,8 @@
 class User < ApplicationRecord
     has_many :microposts, dependent: :destroy
-    has_many :active_relationships, class_name:  "Relationship",
-                                  foreign_key: "follower_id",
-                                  dependent:   :destroy
-    has_many :passive_relationships, class_name:  "Relationship",
-                                  foreign_key: "followed_id",
-                                  dependent:   :destroy
+    has_many :providers, dependent: :destroy
+    has_many :active_relationships, class_name:  "Relationship", foreign_key: "follower_id", dependent: :destroy
+    has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent: :destroy
     has_many :following, through: :active_relationships, source: :followed
     has_many :followers, through: :passive_relationships, source: :follower
     attr_accessor :remember_token, :activation_token, :reset_token
@@ -23,8 +20,7 @@ class User < ApplicationRecord
 
     # Returns the hash digest of the given string.
     def User.digest(string)
-        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
-                                                    BCrypt::Engine.cost
+        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
         BCrypt::Password.create(string, cost: cost)
     end
 
@@ -67,13 +63,22 @@ class User < ApplicationRecord
         reset_sent_at < 2.hours.ago
     end
 
+    def self.from_omniauth(auth)
+        user  = User.find_or_create_by(email: auth[:info][:email]) do |u|
+            u.email = auth[:info][:email]
+            u.name = auth[:info][:name]
+            u.password = SecureRandom.hex(10)
+        end
+        user.providers.create(name: auth[:provider], uid: auth[:uid])
+    end
+
     # Defines a proto-feed.
     # See "Following users" for the full implementation.
     def feed
         following_ids = "SELECT followed_id FROM relationships
-                     WHERE  follower_id = :user_id"
+        WHERE  follower_id = :user_id"
         Micropost.where("user_id IN (#{following_ids})
-                     OR user_id = :user_id", user_id: id)
+        OR user_id = :user_id", user_id: id)
     end
 
     # Follows a user.

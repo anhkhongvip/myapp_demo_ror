@@ -1,5 +1,6 @@
 <% provide(:title, @user.name) %>
 <div class="row">
+  
   <aside class="col-md-4">
     <section class="user_info">
       <h1>
@@ -11,6 +12,7 @@
       <%= render 'shared/stats' %>
     </section>
   </aside>
+
   <div class="col-md-8">
     <%= render 'follow_form' if logged_in? %>
     <% if @user.microposts.any? %>
@@ -21,4 +23,5 @@
       <%= will_paginate @microposts %>
     <% end %>
   </div>
+  
 </div>
